@@ -1,1 +1,10 @@
-Write me a short, warm good-morning WhatsApp message for today. Keep it under 180 words, plain text only (no markdown, no bullet points, no bold). Include one actionable tip or uplifting thought to carry through the day. Sign off naturally — no formal closing.
+Provide a short and sweet motivational morning message with an educational AI tip for Sri Lankan Grade 5 scholarship parents, featuring a modern marketing format and clean emojis.
+
+--- OUTPUT RULES (IMPORTANT: this message is posted straight into a WhatsApp group) ---
+- Write it FOR WhatsApp. Keep it under about 120 words.
+- Do NOT use Markdown headers (#), tables, or horizontal lines (---). They do not render on WhatsApp and look broken.
+- For emphasis use WhatsApp formatting only: *bold text* (single asterisks) and _italic text_ (underscores).
+- Use short lines with a blank line between ideas so it is easy to read on a phone.
+- Warm, encouraging tone. Mix simple English with casual Sinhala / Singlish so it feels natural to Sri Lankan parents.
+- End with a short sign-off or a small hashtag line (e.g. #Grade5Scholarship #eBirthAcademy).
+- Reply with ONLY the final message text. Do NOT add "Here is your message" or any note before or after it.
