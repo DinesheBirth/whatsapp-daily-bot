@@ -1,65 +1,67 @@
-# whatsapp-daily-bot
+# Daily WhatsApp Message Bot
 
-Sends an AI-generated daily WhatsApp message every morning at 9:30 AM using **Google Gemini** and **Twilio**.
+Sends one AI-generated motivational message into your WhatsApp community
+every morning at 9:30 AM Sri Lanka time. Free to run (GitHub Actions).
 
-## File structure
+## How it works
 
-```
-whatsapp-daily-bot/
-├── send_daily.py                  ← main script (Gemini → WhatsApp)
-├── requirements.txt               ← Python dependencies
-├── README.md                      ← this file
-├── .github/workflows/
-│   └── daily-whatsapp.yml         ← GitHub Actions cron (9:30 AM daily)
-└── prompts/
-    ├── system_prompt.txt          ← Gemini system prompt
-        └── daily_prompt.txt           ← daily user prompt
-        ```
+1. GitHub Actions wakes up once a day (the cron timer).
+2. `send_daily.py` reads your prompts from the `prompts/` folder.
+3. It asks the Gemini API to write today's message (same brain as your Gem).
+4. It posts the message into your WhatsApp group through Whapi.Cloud.
 
-        ## Setup
+## Files
 
-        ### 1. Clone the repo
+| File | What it is |
+|------|------------|
+| `send_daily.py` | The script that generates + sends the message. |
+| `.github/workflows/daily-whatsapp.yml` | The daily timer (runs on GitHub, free). |
+| `prompts/system_prompt.txt` | Your Gem's full system prompt (the persona). |
+| `prompts/daily_prompt.txt` | Your daily prompt + WhatsApp formatting rules. |
+| `requirements.txt` | The one Python package needed. |
 
-        ```bash
-        git clone https://github.com/DinesheBirth/whatsapp-daily-bot.git
-        cd whatsapp-daily-bot
-        ```
+## One-time setup
 
-        ### 2. Add GitHub Secrets
+### 1. Get your Gemini API key
+- Go to Google AI Studio -> Get API key -> Create API key. Copy it.
 
-        Go to **Settings → Secrets and variables → Actions → New repository secret** and add:
+### 2. Set up the WhatsApp bridge (Whapi.Cloud)
+- Use a SECOND phone number (cheap SIM), not your personal number.
+- Make that number an ADMIN of your WhatsApp community/group.
+- Sign up at whapi.cloud, open the default channel, scan the QR code
+  from that phone: WhatsApp -> Settings -> Linked Devices -> Link a Device.
+- Copy your API token.
+- Find your group ID (looks like `1203...@g.us`) from their dashboard/API.
 
-        | Secret name | Value |
-        |---|---|
-        | `GEMINI_API_KEY` | Your Google AI Studio API key |
-        | `TWILIO_ACCOUNT_SID` | Your Twilio Account SID |
-        | `TWILIO_AUTH_TOKEN` | Your Twilio Auth Token |
-        | `TWILIO_WHATSAPP_FROM` | Twilio sandbox number, e.g. `whatsapp:+14155238886` |
-        | `TWILIO_WHATSAPP_TO` | Your WhatsApp number, e.g. `whatsapp:+91XXXXXXXXXX` |
+### 3. Put these files on GitHub
+- Create a new repository (can be private).
+- Upload all the files, keeping the same folder structure.
 
-        ### 3. Edit your prompts
+### 4. Paste your prompts (already done for you)
+- `prompts/system_prompt.txt` already has your Gem system prompt.
+- `prompts/daily_prompt.txt` already has your daily prompt.
+- Edit them any time to change the voice.
 
-        - `prompts/system_prompt.txt` — paste your Gemini system prompt here
-        - `prompts/daily_prompt.txt` — paste your daily prompt here (keep it WhatsApp-friendly: plain text, no heavy markdown)
+### 5. Add your secrets in GitHub
+Repo -> Settings -> Secrets and variables -> Actions -> New repository secret.
+Add these three:
+- `GEMINI_API_KEY`
+- `WHAPI_TOKEN`
+- `WHATSAPP_GROUP_ID`
 
-        ### 4. Enable GitHub Actions
+### 6. Test it
+- Go to the Actions tab -> "Daily WhatsApp Message" -> Run workflow.
+- Check your WhatsApp group. If the message arrives, you are done.
+- It will now run by itself every day at 9:30 AM Sri Lanka time.
 
-        The workflow in `.github/workflows/daily-whatsapp.yml` runs automatically at **9:30 AM UTC** every day.
-        You can also trigger it manually from the **Actions** tab → **Run workflow**.
+## Changing the time
+`daily-whatsapp.yml` uses UTC. Sri Lanka is UTC+5:30.
+- 9:30 AM SL = `0 4 * * *`
+- 7:00 AM SL = `30 1 * * *`
+- 6:00 PM SL = `30 12 * * *`
 
-        ## Local test
-
-        ```bash
-        pip install -r requirements.txt
-        export GEMINI_API_KEY=...
-        export TWILIO_ACCOUNT_SID=...
-        export TWILIO_AUTH_TOKEN=...
-        export TWILIO_WHATSAPP_FROM=whatsapp:+14155238886
-        export TWILIO_WHATSAPP_TO=whatsapp:+91XXXXXXXXXX
-        python send_daily.py
-        ```
-
-        ## Dependencies
-
-        - `google-generativeai` — Gemini SDK
-        - `twilio` — WhatsApp messaging via Twilio
+## Safety notes
+- Keep it to one message a day. Low volume = low ban risk.
+- Never put keys directly in the code. Only use GitHub Secrets.
+- If the search step ever errors, open `send_daily.py` and set
+  `USE_GOOGLE_SEARCH = False`.
